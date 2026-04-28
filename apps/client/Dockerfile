@@ -9,7 +9,7 @@ COPY packages ./packages
 RUN bun install --frozen-lockfile
 
 COPY . .
-ARG TURBO_SCOPE="@simplebusiness-monorepo-template/client"
+ARG TURBO_SCOPE="@internal-business-os/client"
 RUN bun run turbo prune --scope="$TURBO_SCOPE" --docker
 
 FROM oven/bun:1.3.9 AS deps
@@ -22,7 +22,7 @@ RUN bun install --frozen-lockfile
 
 FROM oven/bun:1.3.9 AS build
 WORKDIR /repo
-ARG TURBO_SCOPE="@simplebusiness-monorepo-template/client"
+ARG TURBO_SCOPE="@internal-business-os/client"
 
 COPY --from=deps /repo/ ./
 RUN bun run turbo run build --filter="$TURBO_SCOPE"...

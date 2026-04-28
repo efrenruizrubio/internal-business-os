@@ -1,5 +1,5 @@
 {
-  "name": "@simplebusiness-monorepo-template/server",
+  "name": "@internal-business-os/server",
   "version": "0.0.1",
   "private": true,
   "scripts": {
