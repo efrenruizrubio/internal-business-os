@@ -2,6 +2,7 @@
   "name": "internal-business-os",
   "private": true,
   "packageManager": "bun@1.3.9",
+  "type": "module",
   "workspaces": [
     "apps/*",
     "packages/*"
