@@ -1,0 +1,30 @@
+# Package manager lock files
+bun.lock
+bun.lockb
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Compiled output and framework-specific directories
+dist/
+build/
+out/
+.next/
+.turbo/
+.cache/
+coverage/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Other
+*.min.js
+*.min.css
+public/

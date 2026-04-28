@@ -1,0 +1,12 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "prettier.documentSelectors": ["**/*.{js,jsx,ts,tsx}"],
+  "json.schemaDownload.enable": true,
+  "json.schemas": [
+    {
+      "fileMatch": ["turbo.json"],
+      "url": "https://turborepo.dev/schema.json"
+    }
+  ]
+}

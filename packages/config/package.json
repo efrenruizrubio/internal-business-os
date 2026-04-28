@@ -1,0 +1,16 @@
+{
+  "name": "@repo/config",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./eslint.base.mjs": "./eslint.base.mjs",
+    "./tsconfig.base.json": "./tsconfig.base.json",
+    "./.prettierrc.json": "./.prettierrc.json"
+  },
+  "devDependencies": {
+    "eslint": "^9.18.0",
+    "eslint-config-prettier": "^10.1.8",
+    "neostandard": "^0.13.0"
+  }
+}
