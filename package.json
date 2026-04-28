@@ -11,6 +11,7 @@
     "build": "turbo run build",
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint:fix",
+    "typecheck": "turbo run typecheck",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,md,json}\"",
     "prepare": "husky",
     "test": "vitest run --passWithNoTests"
@@ -21,6 +22,8 @@
     ]
   },
   "devDependencies": {
+    "@commitlint/cli": "^20.5.2",
+    "@commitlint/config-conventional": "^20.5.0",
     "@repo/config": "workspace:*",
     "@types/bun": "latest",
     "eslint": "^9.18.0",

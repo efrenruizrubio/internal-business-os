@@ -12,6 +12,10 @@
     "lint:fix": {
       "dependsOn": ["^lint:fix"]
     },
+    "typecheck": {
+      "dependsOn": ["^typecheck"],
+      "outputs": []
+    },
     "dev": {
       "persistent": true,
       "cache": false
