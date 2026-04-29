@@ -1,0 +1,93 @@
+@startuml biz-os-db-schema
+title Internal Business OS - Initial Database Schema
+
+hide circle
+skinparam linetype ortho
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+entity "users" as users {
+  * id : uuid <<PK>>
+  --
+  name : varchar(120)
+  email : varchar(255) <<UNIQUE>>
+  password_hash : varchar(255)
+  role : user_role
+  created_at : timestamptz
+  updated_at : timestamptz
+}
+
+entity "projects" as projects {
+  * id : uuid <<PK>>
+  --
+  name : varchar(160)
+  description : text
+  status : project_status
+  created_at : timestamptz
+  updated_at : timestamptz
+}
+
+entity "project_members" as project_members {
+  * id : uuid <<PK>>
+  --
+  project_id : uuid <<FK>>
+  user_id : uuid <<FK>>
+  assigned_by_user_id : uuid <<FK>>
+  assigned_at : timestamptz
+}
+
+entity "activity_logs" as activity_logs {
+  * id : uuid <<PK>>
+  --
+  actor_user_id : uuid <<FK>>
+  project_id : uuid <<FK, nullable>>
+  action : activity_action
+  metadata : jsonb
+  created_at : timestamptz
+}
+
+enum "user_role" as user_role {
+  ADMIN
+  DEV
+  CLIENT
+}
+
+enum "project_status" as project_status {
+  ACTIVE
+  PAUSED
+  COMPLETED
+}
+
+enum "activity_action" as activity_action {
+  PROJECT_CREATED
+  PROJECT_UPDATED
+  USER_ASSIGNED
+}
+
+users ||--o{ project_members : "member user"
+users ||--o{ project_members : "assigned by"
+projects ||--o{ project_members : "members"
+
+users ||--o{ activity_logs : "actor"
+projects |o--o{ activity_logs : "optional project"
+
+users }o..|| user_role : "role"
+projects }o..|| project_status : "status"
+activity_logs }o..|| activity_action : "action"
+
+note right of project_members
+  Rules:
+  - project_id + user_id must be unique
+  - only ADMIN users can assign members
+end note
+
+note right of activity_logs
+  Records system actions such as:
+  - project creation
+  - project updates
+  - user assignments
+
+  project_id is nullable for global actions.
+end note
+
+@enduml
