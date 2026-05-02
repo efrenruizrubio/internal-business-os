@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common'
+import { ConfigModule } from '@nestjs/config'
+
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
-import { ConfigModule } from '@nestjs/config'
+import { SeedModule } from './modules/seed/seed.module'
 import { envSchema, envSchemaOptions } from './constants/env-schema'
 
 @Module({
@@ -11,6 +13,7 @@ import { envSchema, envSchemaOptions } from './constants/env-schema'
       validationOptions: envSchemaOptions,
       isGlobal: true,
     }),
+    SeedModule,
   ],
   controllers: [AppController],
   providers: [AppService],
