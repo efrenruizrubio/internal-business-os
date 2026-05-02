@@ -10,6 +10,8 @@ export const envSchema = Joi.object({
   APPLICATION_ENVIRONMENT: Joi.string()
     .valid(...Object.values(ApplicationEnvironment))
     .required(),
+  JWT_SECRET_KEY: Joi.string().required(),
+  JWT_ISSUER: Joi.string().uri().required(),
 })
 
 export const envSchemaOptions = {
