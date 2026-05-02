@@ -5,6 +5,9 @@ import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { SeedModule } from './modules/seed/seed.module'
 import { envSchema, envSchemaOptions } from './constants/env-schema'
+import { AuthModule } from './modules/auth/auth.module'
+import { UserModule } from './modules/user/user.module'
+import { JwtModule } from './modules/jwt/jwt.module'
 
 @Module({
   imports: [
@@ -14,6 +17,9 @@ import { envSchema, envSchemaOptions } from './constants/env-schema'
       isGlobal: true,
     }),
     SeedModule,
+    UserModule,
+    AuthModule,
+    JwtModule,
   ],
   controllers: [AppController],
   providers: [AppService],
