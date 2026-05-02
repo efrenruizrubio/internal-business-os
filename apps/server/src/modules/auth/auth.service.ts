@@ -26,11 +26,19 @@ export class AuthService {
         throw new BadRequestException('Invalid credentials')
       }
 
-      const token = this.jwtService.sign({ id, name, email: userEmail, role })
+      const token = this.jwtService.sign({ sub: id, name, email: userEmail, role })
 
       return { token }
     } catch {
       throw new BadRequestException('Invalid credentials')
     }
+  }
+
+  refresh(token: string) {
+    const newToken = this.jwtService.refresh(token)
+    if (!newToken) {
+      throw new BadRequestException('Invalid token')
+    }
+    return { token: newToken }
   }
 }
