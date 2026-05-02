@@ -1,0 +1,7 @@
+enum ProjectStatus {
+  ACTIVE
+  PAUSED
+  COMPLETED
+  CANCELED
+  NO_RESOURCES
+}

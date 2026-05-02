@@ -35,3 +35,6 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 
 # turborepo
 .turbo
+/src/generated/prisma
+
+/prisma/apps/server/src/generated/prisma

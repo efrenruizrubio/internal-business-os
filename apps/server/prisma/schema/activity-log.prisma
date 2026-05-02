@@ -1,0 +1,11 @@
+model ActivityLog {
+  id        String   @id @default(cuid())
+  actorId   String
+  projectId String?
+  action    String
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  actor   User     @relation("ActivityActor", fields: [actorId], references: [id])
+  project Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+}
