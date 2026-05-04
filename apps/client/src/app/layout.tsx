@@ -19,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={manrope.variable}>{children}</body>
+      <body className={`${manrope.variable} flex w-dvw max-w-dvw`}>{children}</body>
     </html>
   )
 }
