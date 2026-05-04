@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common'
 import { LoginDto } from './auth.dto'
 import * as bcrypt from 'bcrypt'
 
@@ -18,7 +18,7 @@ export class AuthService {
     try {
       const user = await this.userService.getByEmailOrThrow({ email })
 
-      const { id, name, email: userEmail, role, passwordHash } = user!
+      const { id, passwordHash, ...rest } = user!
 
       const isPasswordValid = await bcrypt.compare(password, passwordHash)
 
@@ -26,19 +26,60 @@ export class AuthService {
         throw new BadRequestException('Invalid credentials')
       }
 
-      const token = this.jwtService.sign({ sub: id, name, email: userEmail, role })
+      const accessToken = this.jwtService.signAccessToken({
+        sub: id,
+        user: rest,
+      })
 
-      return { token }
+      const refreshToken = this.jwtService.signRefreshToken({ sub: id })
+
+      const refreshTokenHash = bcrypt.hashSync(refreshToken, 10)
+
+      await this.userService.updateRefreshTokenHash({ userId: id, refreshTokenHash })
+
+      return { accessToken, refreshToken }
     } catch {
-      throw new BadRequestException('Invalid credentials')
+      throw new UnauthorizedException('Invalid credentials')
     }
   }
 
-  refresh(token: string) {
-    const newToken = this.jwtService.refresh(token)
-    if (!newToken) {
-      throw new BadRequestException('Invalid token')
+  async refresh(refreshToken: string) {
+    const payload = this.jwtService.verifyRefreshToken(refreshToken)
+    if (!payload) {
+      throw new UnauthorizedException('Invalid refresh token')
     }
-    return { token: newToken }
+
+    const user = await this.userService.getRefreshTokenByIdOrThrow(payload.sub)
+
+    if (!user.refreshTokenHash) throw new UnauthorizedException('Invalid refresh token')
+
+    const { id, refreshTokenHash, ...rest } = user
+
+    const isRefreshTokenValid = await bcrypt.compare(refreshToken, refreshTokenHash)
+
+    if (!isRefreshTokenValid) throw new UnauthorizedException('Invalid refresh token')
+
+    const newAccessToken = this.jwtService.signAccessToken({ sub: id, user: rest })
+
+    const newRefreshToken = this.jwtService.signRefreshToken({ sub: id })
+
+    const newRefreshTokenHash = await bcrypt.hash(newRefreshToken, 10)
+
+    await this.userService.updateRefreshTokenHash({
+      userId: id,
+      refreshTokenHash: newRefreshTokenHash,
+    })
+
+    return {
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken,
+    }
+  }
+
+  async logout(userId: string) {
+    await this.userService.updateRefreshTokenHash({
+      userId,
+      refreshTokenHash: null,
+    })
   }
 }

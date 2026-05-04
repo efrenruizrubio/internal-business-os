@@ -4,7 +4,7 @@ import * as bcrypt from 'bcrypt'
 const PASSWORD = '123456'
 const SALT_ROUNDS = 10
 
-type UserSeedData = Omit<User, 'id' | 'createdAt' | 'updatedAt'>
+type UserSeedData = Omit<User, 'id' | 'createdAt' | 'updatedAt' | 'refreshTokenHash'>
 
 export const usersSeed: UserSeedData[] = [
   {

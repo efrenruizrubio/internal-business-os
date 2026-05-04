@@ -1,48 +1,62 @@
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { CreateTokenPayload, JWTPayload } from './jwt.types'
+import {
+  AccessJwtPayload,
+  CreateTokenPayload,
+  RefreshJwtPayload,
+  RefreshTokenPayload,
+} from './jwt.types'
 import * as jwt from 'jsonwebtoken'
 
 @Injectable()
 export class JwtService {
-  private expirationTime = 60 * 10
+  private secret: string
+  private issuer: string
 
-  constructor(private configService: ConfigService) {}
+  constructor(private configService: ConfigService) {
+    this.secret = this.configService.get<string>('JWT_SECRET_KEY')!
+    this.issuer = this.configService.get<string>('JWT_ISSUER')!
+  }
 
-  sign(payload: CreateTokenPayload) {
-    const secret = this.configService.get<string>('JWT_SECRET_KEY')!
-    const issuer = this.configService.get<string>('JWT_ISSUER')!
-
-    return jwt.sign(payload, secret, {
-      expiresIn: this.expirationTime,
+  signAccessToken(payload: CreateTokenPayload) {
+    return jwt.sign(payload, this.secret, {
+      expiresIn: '10m',
       algorithm: 'HS256',
-      issuer,
+      issuer: this.issuer,
+      audience: 'access',
     })
   }
 
-  verify(token: string) {
-    const secret = this.configService.get<string>('JWT_SECRET_KEY')!
-    const issuer = this.configService.get<string>('JWT_ISSUER')!
+  signRefreshToken({ sub }: RefreshTokenPayload) {
+    return jwt.sign({ sub, type: 'refresh' }, this.secret, {
+      expiresIn: '7d',
+      algorithm: 'HS256',
+      issuer: this.issuer,
+      audience: 'refresh',
+    })
+  }
 
+  verifyAccessToken(token: string) {
     try {
-      const decoded = jwt.verify(token, secret, {
+      return jwt.verify(token, this.secret, {
         algorithms: ['HS256'],
-        issuer,
-      }) as JWTPayload
-      return decoded
+        issuer: this.issuer,
+        audience: 'access',
+      }) as AccessJwtPayload
     } catch (error) {
       return null
     }
   }
 
-  refresh(token: string) {
-    const payload = this.verify(token)
-    if (!payload) {
+  verifyRefreshToken(token: string) {
+    try {
+      return jwt.verify(token, this.secret, {
+        algorithms: ['HS256'],
+        issuer: this.issuer,
+        audience: 'refresh',
+      }) as RefreshJwtPayload
+    } catch (error) {
       return null
     }
-
-    const { email, name, role, sub } = payload
-
-    return this.sign({ email, name, role, sub })
   }
 }
