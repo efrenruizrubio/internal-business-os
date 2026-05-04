@@ -21,3 +21,13 @@ export interface AccessJwtPayload {
 export type RefreshJwtPayload = Pick<AccessJwtPayload, 'sub'> & {
   type: string
 }
+
+export interface JWTPayload {
+  name: string
+  email: string
+  role: string
+  sub: string
+  iat: number
+  exp: number
+  iss: string
+}
