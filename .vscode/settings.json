@@ -8,5 +8,8 @@
       "fileMatch": ["turbo.json"],
       "url": "https://turborepo.dev/schema.json"
     }
-  ]
+  ],
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  }
 }

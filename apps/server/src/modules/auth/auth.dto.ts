@@ -1,4 +1,4 @@
-import { IsEmail, IsJWT, IsString } from 'class-validator'
+import { IsEmail, IsString } from 'class-validator'
 
 export class LoginDto {
   @IsEmail()
@@ -6,9 +6,4 @@ export class LoginDto {
 
   @IsString()
   password!: string
-}
-
-export class RefreshTokenDto {
-  @IsJWT()
-  token!: string
 }
