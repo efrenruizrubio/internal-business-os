@@ -1,4 +1,3 @@
 bun lint-staged
-bun prisma:format
 bun typecheck
 bun prisma:validate
