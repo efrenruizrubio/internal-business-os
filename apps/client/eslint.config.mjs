@@ -2,6 +2,7 @@ import { baseConfig } from '@repo/config/eslint.base.mjs'
 import nextPlugin from '@next/eslint-plugin-next'
 import reactPlugin from 'eslint-plugin-react'
 import hooksPlugin from 'eslint-plugin-react-hooks'
+import reactQuery from '@tanstack/eslint-plugin-query'
 
 export default [
   ...baseConfig,
@@ -10,6 +11,7 @@ export default [
       '@next/next': nextPlugin,
       react: reactPlugin,
       'react-hooks': hooksPlugin,
+      tanstack: reactQuery,
     },
     rules: {
       ...nextPlugin.configs.recommended.rules,

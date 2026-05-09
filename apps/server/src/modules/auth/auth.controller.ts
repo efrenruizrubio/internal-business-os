@@ -3,13 +3,22 @@ import { AuthService } from './auth.service'
 import { LoginDto } from './auth.dto'
 import { Public } from '@/decorators/is-public.decorator'
 import type { Response, Request } from 'express'
+import { ConfigService } from '@nestjs/config'
+import { ApplicationEnvironment } from '@/constants/env-schema'
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  private environment: ApplicationEnvironment
+
+  constructor(
+    private readonly authService: AuthService,
+    private readonly configService: ConfigService,
+  ) {
+    this.environment = this.configService.get<ApplicationEnvironment>('APPLICATION_ENVIRONMENT')!
+  }
 
   @Public()
-  @HttpCode(204)
+  @HttpCode(201)
   @Post('login')
   async login(@Body() body: LoginDto, @Res({ passthrough: true }) response: Response) {
     const { accessToken, refreshToken } = await this.authService.login(body)
@@ -18,7 +27,7 @@ export class AuthController {
   }
 
   @Public()
-  @HttpCode(204)
+  @HttpCode(201)
   @Post('refresh-token')
   async refresh(@Req() request: Request, @Res({ passthrough: true }) response: Response) {
     const refreshToken = request.cookies?.refreshToken as string | undefined
@@ -35,7 +44,7 @@ export class AuthController {
   private setAuthCookies(response: Response, accessToken: string, refreshToken: string) {
     response.cookie('accessToken', accessToken, {
       httpOnly: true,
-      secure: true,
+      secure: this.environment === ApplicationEnvironment.PRODUCTION,
       sameSite: 'lax',
       path: '/',
       maxAge: 1000 * 60 * 10,
@@ -43,9 +52,9 @@ export class AuthController {
 
     response.cookie('refreshToken', refreshToken, {
       httpOnly: true,
-      secure: true,
+      secure: this.environment === ApplicationEnvironment.PRODUCTION,
       sameSite: 'lax',
-      path: '/auth/refresh-token',
+      path: '/',
       maxAge: 1000 * 60 * 60 * 24 * 7,
     })
   }
