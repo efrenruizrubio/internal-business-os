@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import { Manrope } from 'next/font/google'
 import './globals.css'
+import { QueryClientProvider } from './query-client-provider'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { Toaster } from 'sileo'
 
 const manrope = Manrope({
   variable: '--font-manrope',
@@ -18,8 +21,19 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className={manrope.variable}>{children}</body>
+    <html lang="en" data-scroll-behavior="smooth">
+      <body className={`${manrope.variable} flex w-dvw max-w-dvw`}>
+        <QueryClientProvider>
+          <Toaster
+            position="top-center"
+            options={{
+              duration: 3000,
+            }}
+          />
+          {children}
+          <ReactQueryDevtools position="right" />
+        </QueryClientProvider>
+      </body>
     </html>
   )
 }
