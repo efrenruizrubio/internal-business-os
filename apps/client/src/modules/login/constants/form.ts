@@ -1,5 +1,5 @@
-import { Icons } from '@/modules/shared/icons'
-import { Field } from '@modules/shared/form/form.types'
+import { Icons } from '@/modules/shared/components/icons'
+import { Field } from '@/modules/shared/components/form/form.types'
 import * as z from 'zod'
 
 export interface LoginFormValues {

@@ -20,7 +20,8 @@
     "paths": {
       "@/*": ["./src/*"],
       "@modules/*": ["./src/modules/*"],
-      "@services/*": ["./src/services/*"]
+      "@services/*": ["./src/modules/login/services/*"],
+      "@shared/*": ["./src/modules/shared/*"]
     }
   },
   "include": [

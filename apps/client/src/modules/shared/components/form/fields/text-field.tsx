@@ -1,6 +1,6 @@
 import { useFormState, type FieldValues } from 'react-hook-form'
 import { TextInputProps } from '../form.types'
-import { Icons, ICONS } from '../../icons'
+import { Icons, ICONS } from '@shared/components/icons'
 
 export const TextField = <TValues extends FieldValues>({
   field: { name, htmlType, icon, label, placeholder, validations, props = {} },
