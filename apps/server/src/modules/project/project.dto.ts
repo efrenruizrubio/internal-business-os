@@ -1,6 +1,7 @@
 import { ProjectStatus } from '@/generated/prisma/enums'
 import type { ProjectCreateInput } from '@/generated/prisma/models'
-import { IsEnum, IsOptional, IsString } from 'class-validator'
+import { PartialType } from '@nestjs/mapped-types'
+import { IsArray, IsEnum, IsOptional, IsString } from 'class-validator'
 
 export class CreateProjectDto implements ProjectCreateInput {
   @IsString()
@@ -13,4 +14,10 @@ export class CreateProjectDto implements ProjectCreateInput {
   @IsEnum(ProjectStatus)
   @IsOptional()
   status?: ProjectStatus
+
+  @IsArray()
+  @IsString({ each: true, message: 'Each element of membersIds array must be a string' })
+  membersIds!: string[]
 }
+
+export class UpdateProjectDto extends PartialType(CreateProjectDto) {}

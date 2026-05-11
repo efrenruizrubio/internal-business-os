@@ -1,6 +1,6 @@
-import { Body, Controller, Get, HttpCode, Param, Post, Req } from '@nestjs/common'
+import { Body, Controller, Get, HttpCode, Param, Patch, Post, Req } from '@nestjs/common'
 import { ProjectService } from './project.service'
-import { CreateProjectDto } from './project.dto'
+import { CreateProjectDto, UpdateProjectDto } from './project.dto'
 import { Roles } from '@/decorators/roles.decorator'
 import { UserRole } from '@/generated/prisma/enums'
 import type { AuthenticatedRequest } from '../auth/auth.types'
@@ -26,5 +26,12 @@ export class ProjectController {
   @Get(':id')
   async getById(@Req() request: AuthenticatedRequest, @Param('id') id: string) {
     return await this.projectService.getById(request.user, id)
+  }
+
+  @HttpCode(200)
+  @Roles(UserRole.ADMIN)
+  @Patch(':id')
+  async update(@Body() payload: UpdateProjectDto, @Param('id') id: string) {
+    return await this.projectService.update(id, payload)
   }
 }

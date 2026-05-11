@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
-import { CreateProjectDto } from './project.dto'
+import { CreateProjectDto, UpdateProjectDto } from './project.dto'
 import { UserJWT } from '../jwt/jwt.types'
 import { UserRole } from '@/generated/prisma/enums'
 
@@ -8,9 +8,16 @@ import { UserRole } from '@/generated/prisma/enums'
 export class ProjectService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async create(payload: CreateProjectDto) {
+  async create({ membersIds, ...payload }: CreateProjectDto) {
     const { id } = await this.prismaService.project.create({
-      data: payload,
+      data: {
+        ...payload,
+        members: {
+          create: membersIds.map((userId) => ({
+            userId,
+          })),
+        },
+      },
       select: {
         id: true,
       },
@@ -21,7 +28,7 @@ export class ProjectService {
 
   async get(user: UserJWT) {
     if (user.role === UserRole.ADMIN) {
-      return this.getAll()
+      return await this.getAll()
     } else {
       return await this.getBelongingProjects(user.id)
     }
@@ -31,6 +38,20 @@ export class ProjectService {
     return await this.prismaService.project.findMany({
       orderBy: {
         createdAt: 'asc',
+      },
+      include: {
+        members: {
+          select: {
+            user: {
+              omit: {
+                createdAt: true,
+                updatedAt: true,
+                passwordHash: true,
+                refreshTokenHash: true,
+              },
+            },
+          },
+        },
       },
     })
   }
@@ -84,5 +105,22 @@ export class ProjectService {
     }
 
     return project
+  }
+
+  async update(id: string, { membersIds, ...projectData }: UpdateProjectDto) {
+    await this.getProjectByIdOrThrow(id)
+
+    return await this.prismaService.project.update({
+      where: { id },
+      data: {
+        ...projectData,
+        members: membersIds
+          ? {
+              deleteMany: {},
+              create: membersIds.map((userId) => ({ userId })),
+            }
+          : undefined,
+      },
+    })
   }
 }
