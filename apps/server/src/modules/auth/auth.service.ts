@@ -4,12 +4,16 @@ import * as bcrypt from 'bcrypt'
 
 import { UserService } from '../user/user.service'
 import { JwtService } from '../jwt/jwt.service'
+import { UserJWT } from '../jwt/jwt.types'
+import { MenuService } from '../menu/menu.service'
+import { SessionData } from './auth.types'
 
 @Injectable()
 export class AuthService {
   constructor(
-    private userService: UserService,
+    private readonly userService: UserService,
     private readonly jwtService: JwtService,
+    private readonly menuService: MenuService,
   ) {}
 
   async login(payload: LoginDto) {
@@ -73,6 +77,14 @@ export class AuthService {
     return {
       accessToken: newAccessToken,
       refreshToken: newRefreshToken,
+    }
+  }
+
+  getSession(user: UserJWT): SessionData {
+    return {
+      user,
+      menu: this.menuService.getMenuOptions(user.role),
+      allowedRoutes: this.menuService.getAllowedRoutes(user.role),
     }
   }
 

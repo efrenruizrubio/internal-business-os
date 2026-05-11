@@ -1,19 +1,30 @@
 'use client'
 
-import { Form } from '@/modules/shared/form/form'
+import { Form } from '@/modules/shared/components/form/form'
 import { loginFormFields, loginFormSchema, LoginFormValues } from '../constants/form'
 import { SubmitHandler } from 'react-hook-form'
-import { authenticate } from '@/services/login'
-import { useMutation } from '@tanstack/react-query'
+import { authenticate, getSession } from '@/modules/login/services'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { sileo } from 'sileo'
 import { useRouter } from 'next/navigation'
+import { authQueryKeys } from '../constants/query-keys'
 
 export const LoginForm = () => {
+  const queryClient = useQueryClient()
+
   const { replace } = useRouter()
 
   const mutation = useMutation({
     mutationFn: authenticate,
-    onSuccess: () => replace('/home'),
+    onSuccess: async () => {
+      await queryClient.fetchQuery({
+        queryKey: authQueryKeys.session(),
+        queryFn: getSession,
+        staleTime: Infinity,
+      })
+
+      replace('/dashboard')
+    },
   })
 
   const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {

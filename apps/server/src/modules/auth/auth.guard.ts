@@ -22,17 +22,17 @@ export class AuthGuard implements CanActivate {
     const request: AuthenticatedRequest = context.switchToHttp().getRequest()
     const token = this.extractTokenFromCookie(request)
     if (!token) {
-      throw new UnauthorizedException()
+      throw new UnauthorizedException('accessToken is missing')
     }
     try {
       const payload = this.jwtService.verifyAccessToken(token)
       if (!payload) {
-        throw new UnauthorizedException()
+        throw new UnauthorizedException('token is not valid')
       }
 
       request.user = payload.user
     } catch {
-      throw new UnauthorizedException()
+      throw new UnauthorizedException('an error occurred')
     }
 
     return true
