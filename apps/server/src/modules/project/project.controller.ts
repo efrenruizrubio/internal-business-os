@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Post, Req } from '@nestjs/common'
+import { Body, Controller, Get, HttpCode, Param, Post, Req } from '@nestjs/common'
 import { ProjectService } from './project.service'
 import { CreateProjectDto } from './project.dto'
 import { Roles } from '@/decorators/roles.decorator'
@@ -20,5 +20,11 @@ export class ProjectController {
   @Get()
   async get(@Req() request: AuthenticatedRequest) {
     return await this.projectService.get(request.user)
+  }
+
+  @HttpCode(200)
+  @Get(':id')
+  async getById(@Req() request: AuthenticatedRequest, @Param('id') id: string) {
+    return await this.projectService.getById(request.user, id)
   }
 }

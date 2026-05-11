@@ -22,7 +22,7 @@ export class AuthService {
     try {
       const user = await this.userService.getByEmailOrThrow({ email })
 
-      const { id, passwordHash, ...rest } = user!
+      const { id, passwordHash, refreshTokenHash: _refreshToken, ...rest } = user!
 
       const isPasswordValid = await bcrypt.compare(password, passwordHash)
 

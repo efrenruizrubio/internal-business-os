@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
 import { CreateProjectDto } from './project.dto'
 import { UserJWT } from '../jwt/jwt.types'
@@ -48,5 +48,41 @@ export class ProjectService {
         createdAt: 'asc',
       },
     })
+  }
+
+  async getProjectByIdOrThrow(id: string) {
+    const project = await this.prismaService.project.findFirst({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        status: true,
+        activityLogs: true,
+        createdAt: true,
+        updatedAt: true,
+        members: {
+          select: {
+            user: { omit: { passwordHash: true, createdAt: true, updatedAt: true } },
+          },
+        },
+      },
+    })
+
+    if (!project) throw new NotFoundException(`Project with ID \`${id}\` not found.`)
+
+    return project
+  }
+
+  async getById(user: UserJWT, projectId: string) {
+    const project = await this.getProjectByIdOrThrow(projectId)
+
+    if (user.role === UserRole.ADMIN) {
+      return project
+    } else if (!project.members.some(({ user: { id } }) => id === user.id)) {
+      throw new ForbiddenException()
+    }
+
+    return project
   }
 }
