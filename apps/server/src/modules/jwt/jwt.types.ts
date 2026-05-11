@@ -1,6 +1,6 @@
 import { User } from '../user/user.types'
 
-export type UserJWT = Omit<User, 'id' | 'passwordHash' | 'refreshTokenHash'>
+export type UserJWT = Omit<User, 'passwordHash' | 'refreshTokenHash'>
 
 export interface CreateTokenPayload {
   sub: string

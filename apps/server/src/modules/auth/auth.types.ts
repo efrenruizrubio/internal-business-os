@@ -3,7 +3,7 @@ import type { UserJWT } from '../jwt/jwt.types'
 import { MenuItem } from '../menu/menu.types'
 
 export type AuthenticatedRequest = Request & {
-  user?: UserJWT
+  user: UserJWT
   cookies: {
     accessToken?: string
     refreshToken?: string

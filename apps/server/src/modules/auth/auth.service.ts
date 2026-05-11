@@ -32,7 +32,7 @@ export class AuthService {
 
       const accessToken = this.jwtService.signAccessToken({
         sub: id,
-        user: rest,
+        user: { ...rest, id },
       })
 
       const refreshToken = this.jwtService.signRefreshToken({ sub: id })
@@ -63,7 +63,7 @@ export class AuthService {
 
     if (!isRefreshTokenValid) throw new UnauthorizedException('Invalid refresh token')
 
-    const newAccessToken = this.jwtService.signAccessToken({ sub: id, user: rest })
+    const newAccessToken = this.jwtService.signAccessToken({ sub: id, user: { ...rest, id } })
 
     const newRefreshToken = this.jwtService.signRefreshToken({ sub: id })
 
