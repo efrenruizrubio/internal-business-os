@@ -16,7 +16,7 @@ export class ProjectController {
     return await this.projectService.create(payload)
   }
 
-  @HttpCode(201)
+  @HttpCode(200)
   @Get()
   async get(@Req() request: AuthenticatedRequest) {
     return await this.projectService.get(request.user)
