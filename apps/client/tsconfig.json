@@ -21,7 +21,8 @@
       "@/*": ["./src/*"],
       "@modules/*": ["./src/modules/*"],
       "@services/*": ["./src/modules/login/services/*"],
-      "@shared/*": ["./src/modules/shared/*"]
+      "@shared/*": ["./src/modules/shared/*"],
+      "@stores/*": ["./src/modules/shared/stores/*"]
     }
   },
   "include": [

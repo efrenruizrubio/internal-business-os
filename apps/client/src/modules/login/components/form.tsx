@@ -36,7 +36,7 @@ export const LoginForm = () => {
   }
 
   return (
-    <article className="bg-card text-card-foreground border-border w-full rounded-md border p-6 shadow-sm min-[1920px]:w-1/4! min-[2560px]:w-1/6! md:w-2/3 md:self-center lg:w-2/4 xl:w-1/3">
+    <article className="bg-card text-card-foreground border-border desktop:w-1/4! 2k:w-1/6! w-full rounded-md border p-6 shadow-sm md:w-2/3 md:self-center lg:w-2/4 xl:w-1/3">
       <div className="mb-6">
         <h2 className="text-xl leading-[1.3] font-semibold">Welcome back</h2>
         <p className="text-muted-foreground mt-1 text-sm leading-5">

@@ -20,7 +20,8 @@
     "react-hook-form": "^7.75.0",
     "sileo": "^0.1.5",
     "tailwind-animations": "^1.0.1",
-    "zod": "^4.4.3"
+    "zod": "^4.4.3",
+    "zustand": "^5.0.13"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^16.2.4",

@@ -1,7 +1,9 @@
+import { Icons } from '@shared/components/icons'
+
 export enum UserRole {
-  ADMIN,
-  DEV,
-  CLIENT,
+  ADMIN = 'ADMIN',
+  DEV = 'DEV',
+  CLIENT = 'CLIENT',
 }
 
 export interface User {
@@ -15,7 +17,7 @@ export interface User {
 export interface MenuItem {
   label: string
   href: string
-  icon: string
+  icon: Icons
 }
 
 export interface SessionData {
